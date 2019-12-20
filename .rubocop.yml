@@ -1,0 +1,28 @@
+AllCops:
+  TargetRubyVersion: 2.6.3
+
+
+Ruby:
+  Enabled: true
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 22
+
+Metrics/ClassLength:
+  Max: 600
+
+Metrics/PerceivedComplexity:
+  Max: 20
+
+Metrics/CyclomaticComplexity:
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 28
+
+Style/ClassVars:
+  Enabled: false
+
