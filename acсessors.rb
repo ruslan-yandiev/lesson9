@@ -1,3 +1,4 @@
+# add getter, satter and alias_method
 class Module
   def attr_accessor_with_history(*methods)
     methods.each do |method|

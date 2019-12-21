@@ -4,9 +4,11 @@
 class Station
   include InstanceCounter
 
-  attr_reader :train, :name
-
   NAME = /^[а-яa-z]+\D/i.freeze
+
+  attr_reader :train, :name
+  validate :name, :presence
+  validate :name, :format, NAME
 
   @@all = []
 
@@ -20,20 +22,6 @@ class Station
 
   def each_train
     @trains.each { |train| yield(train) } if block_given?
-  end
-
-  # !!validate!
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
-  def validate!
-    raise 'Name can`t be nil' unless @name
-    raise 'Name can`t be empty string' if @name == ''
-    raise 'Name has invalid format' if @name !~ NAME
   end
 
   def self.all
@@ -55,5 +43,5 @@ class Station
     @trains.delete(train)
   end
 
-  protected :validate!, :each_train
+  protected :each_train
 end

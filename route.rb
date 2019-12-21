@@ -4,23 +4,17 @@
 class Route
   include InstanceCounter
 
-  attr_accessor :route, :name
-
   NAME = /^[а-яa-z]+\D/i.freeze
+
+  attr_accessor :route, :name
+  validate :name, :presence
+  validate :name, :format, NAME
 
   def initialize(name)
     @name = name
     @route = []
     validate!
     register_instance
-  end
-
-  # !!validate!
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
   end
 
   def add_stations(new_route)
@@ -40,13 +34,5 @@ class Route
     else
       @route.each { |x| puts x.name }
     end
-  end
-
-  protected
-
-  def validate!
-    raise 'Name can`t be nil' unless @name
-    raise 'Name can`t be empty string' if @name == ''
-    raise 'Name has invalid format' if @name !~ NAME
   end
 end

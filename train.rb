@@ -9,6 +9,11 @@ class Train
   NAME_FORMAT = /^[а-яa-z]+\D/i.freeze
 
   attr_reader :carrig, :number
+  attr_accessor_with_history :color, :repair_date
+  strong_attr_accessor :production_year, Integer
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
+  validate :name_manufacturer, :format, NAME_FORMAT
 
   def initialize(number)
     @number = number
@@ -35,13 +40,6 @@ class Train
 
   def each_wagon
     @carrig.each { |carrig| yield(carrig) } if block_given?
-  end
-
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
   end
 
   def get!
@@ -152,13 +150,5 @@ class Train
 
   def start
     @speed = 100
-  end
-
-  def validate!
-    raise 'Number can`t be nil' unless @number
-    raise 'Name manufacturer can`t be nil' unless @name_manufacturer
-    raise 'Name manufacturer can`t be empty string' if @name_manufacturer == ''
-    raise 'Number has invalid format' if @number !~ NUMBER_FORMAT
-    raise 'Name manufacturer has invalid format' if @name_manufacturer !~ NAME_FORMAT
   end
 end

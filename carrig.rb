@@ -4,10 +4,15 @@
 class Carrig
   include TrainCarrige
 
-  attr_reader :number, :amount
-
   NUMBER_FORMAT = /^[0-9a-zа-я]{3}-?[0-9a-zа-я]{2}$/i.freeze
   NAME_FORMAT = /^[а-яa-z]+\D/i.freeze
+
+  attr_reader :number, :amount
+  attr_accessor_with_history :color, :repair_date
+  strong_attr_accessor :production_year, Integer
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
+  validate :name_manufacturer, :format, NAME_FORMAT
 
   def initialize(number, amount)
     @number = number
@@ -41,21 +46,6 @@ class Carrig
     free_amount
   end
 
-  def valid?
-    validate!
-    true
-  rescue StandardError
-    false
-  end
-
-  def validate!
-    raise 'Number can`t be nil' if @number.nil?
-    raise 'Name manufacturer can`t be nil' if @name_manufacturer.nil?
-    raise 'Name manufacturer can`t be empty string' if @name_manufacturer == ''
-    raise 'Number has invalid format' if @number !~ NUMBER_FORMAT
-    raise 'Name manufacturer has invalid format' if @name_manufacturer !~ NAME_FORMAT
-  end
-
   def change_status(train)
     if train.carrig.include?(self)
       connect
@@ -76,5 +66,5 @@ class Carrig
     "Тип вагона: #{self.class}, номер: #{number}, соединен ли с поездом: #{@status}, производитель #{name_manufacturer}"
   end
 
-  protected :connect, :disconnect, :validate!
+  protected :connect, :disconnect
 end
