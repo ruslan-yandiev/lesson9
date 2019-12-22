@@ -66,6 +66,9 @@ class Constr
       \rнеобязательный дефис (может быть, а может нет) и еще 2 буквы или цифры после дефиса."
     numb = gets.chomp
     object = @collection[number].new(numb)
+    add_production_year(object)
+    additional_values(object)
+    show_additional_values(object)
     @cargo_trains << object
   rescue RuntimeError => e
     puts e
@@ -77,6 +80,9 @@ class Constr
       \rнеобязательный дефис (может быть, а может нет) и еще 2 буквы или цифры после дефиса."
     numb = gets.chomp
     object = @collection[number].new(numb)
+    add_production_year(object)
+    additional_values(object)
+    show_additional_values(object)
     @passenger_trains << object
   rescue RuntimeError => e
     puts e
@@ -92,6 +98,9 @@ class Constr
     amounts = gets.chomp.to_i
 
     object = @collection[number].new(numb, amounts)
+    add_production_year(object)
+    additional_values(object)
+    show_additional_values(object)
     @f_carrigs << object
   rescue RuntimeError => e
     puts e
@@ -107,6 +116,9 @@ class Constr
     amounts = gets.chomp.to_i
 
     object = @collection[number].new(numb, amounts)
+    add_production_year(object)
+    additional_values(object)
+    show_additional_values(object)
     @p_carrigs << object
   rescue RuntimeError => e
     puts e
@@ -122,6 +134,51 @@ class Constr
     ]
 
     send_methods.each { |method| puts method }
+  end
+
+  def additional_values(object)
+    loop do
+      puts 'Укажите цвет:'
+
+      colors = gets.chomp
+
+      object.color = colors
+
+      puts 'Укажите дату ремонта:'
+      repair_dates = gets.chomp
+
+      object.repair_date = repair_dates
+
+      puts 'Повторить присвоение цвета и даты ремонта? (да/нет)'
+      yes_or_no = gets.chomp
+
+      break if yes_or_no != 'да'
+    end
+  end
+
+  def show_additional_values(object)
+    puts 'Хотите отобразить последний цвет и дату ремонта?(да/нет)'
+    yes_or_no = gets.chomp
+
+    return unless yes_or_no == 'да'
+
+    puts object.color
+    puts object.repair_date
+
+    puts 'Хотите отобразить всю историю изменений цвета и ремонтов?(да/нет)'
+    yes_or_no = gets.chomp
+
+    return unless yes_or_no == 'да'
+
+    puts object.color_history
+    puts object.repair_date_history
+  end
+
+  def add_production_year(object)
+    puts 'Введите дату изготовления'
+    year = gets.strip.to_i
+
+    object.production_year = year
   end
 
   def show_amount_object
