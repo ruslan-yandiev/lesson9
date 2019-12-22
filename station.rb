@@ -20,10 +20,6 @@ class Station
     @@all << self
   end
 
-  def each_train
-    @trains.each { |train| yield(train) } if block_given?
-  end
-
   def self.all
     @@all
   end
@@ -43,5 +39,9 @@ class Station
     @trains.delete(train)
   end
 
-  protected :each_train
+  protected
+
+  def each_train
+    @trains.each { |train| yield(train) } if block_given?
+  end
 end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 # add getter, satter and alias_method
 class Module
   def attr_accessor_with_history(*methods)
     methods.each do |method|
-      raise TypeError.new("method name is not symbol") unless method.is_a?(Symbol)
+      raise TypeError, 'method name is not symbol' unless method.is_a?(Symbol)
 
       var_name = "@#{method}"
 
@@ -15,7 +17,7 @@ class Module
 
       alias_method "#{method}_history", method
 
-      self.class_eval %(
+      class_eval %(
         def #{method}
           @#{method}.last
         end
@@ -24,14 +26,15 @@ class Module
   end
 
   def strong_attr_accessor(name, class_name)
-    raise TypeError.new("#{name} is not symbol") unless name.kind_of?(Symbol)
+    raise TypeError, "#{name} is not symbol" unless name.is_a?(Symbol)
 
     var_name = "@#{name}"
 
     define_method(name) { instance_variable_get(var_name) }
 
     define_method("#{name}=") do |value|
-      raise TypeError.new("#{name} is not #{class_name}") unless value.kind_of? class_name
+      raise TypeError, "#{name} is not #{class_name}" unless value.is_a? class_name
+
       instance_variable_set(var_name, value)
     end
   end
