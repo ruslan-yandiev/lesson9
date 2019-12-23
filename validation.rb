@@ -34,7 +34,7 @@ module Validation
       end
     end
 
-    def presence_valid(value, _arg)
+    def presence_valid(value, args)
       raise 'is not present!!!' if value.nil? || value == ''
     end
 
