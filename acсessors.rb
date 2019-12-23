@@ -15,13 +15,10 @@ class Module
         instance_variable_set(var_name, values)
       end
 
-      alias_method "#{method}_history", method
-
-      class_eval %(
-        def #{method}
-          @#{method}.last
-        end
-      )
+      define_method("#{method}_history") do
+        value = instance_variable_get(var_name)
+        instance_variable_set("@#{method}_history".to_sym, value)
+      end
     end
   end
 

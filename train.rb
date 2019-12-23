@@ -2,6 +2,7 @@
 
 # this is a comment
 class Train
+  include Validation
   include TrainCarrige
   include InstanceCounter # Train.include(InstanceCounter)
 

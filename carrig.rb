@@ -2,6 +2,7 @@
 
 # this is comments
 class Carrig
+  include Validation
   include TrainCarrige
 
   NUMBER_FORMAT = /^[0-9a-zа-я]{3}-?[0-9a-zа-я]{2}$/i.freeze

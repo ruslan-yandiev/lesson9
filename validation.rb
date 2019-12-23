@@ -1,52 +1,56 @@
 # frozen_string_literal: true
 
-# Validation
-class Module
-  protected
+# validation_module
+module Validation
+  def self.included(base)
+    base.extend ClassMethods
+    base.send :include, InstanceMethods
+  end
 
-  def validate(name, valid, *args)
-    raise TypeError, "#{name} or #{valid} is not symbol" unless [name, valid].each { |arg| arg.is_a?(Symbol) }
+  # class_method
+  module ClassMethods
+    def validate(name, validation, *args)
+      send "#{validation}_valid", name, *args
+    end
 
-    var_name = "@#{name}"
+    protected
 
-    if valid == :presence
-      define_method("#{name}_vp".to_sym) do
-        inst_var = instance_variable_get(var_name)
-        raise "#{var_name} is not present" if inst_var.nil? || inst_var == ''
+    def presence_valid(name)
+      define_method("#{name}_present?") do
+        value = instance_variable_get("@#{name}")
+        raise "#{name} is not present!!!" if value.nil? || value == ''
       end
     end
 
-    if valid == :type
-      define_method("#{name}_v".to_sym) do
-        inst_var = instance_variable_get(var_name)
-        raise TypeError, "#{var_name} is not #{args[0]}" unless inst_var.is_a? args[0]
+    def format_valid(name, args)
+      define_method("#{name}_format?") do
+        value = instance_variable_get("@#{name}")
+        raise "#{name} invalid format!!!" if value !~ args
       end
     end
 
-    if valid == :format && args[0] == /^[0-9a-zа-я]{3}-?[0-9a-zа-я]{2}$/i.freeze
-      define_method("#{name}_v".to_sym) do
-        inst_var = instance_variable_get(var_name)
-        raise "invalid format #{inst_var}" if inst_var !~ args[0]
+    def type_valid(name, args)
+      define_method("#{name}_type?") do
+        value = instance_variable_get("@#{name}")
+        raise TypeError, "#{name} is not #{args}" unless value.is_a? args
       end
     end
+  end
 
-    if valid == :format && args[0] == /^[а-яa-z]+\D/i.freeze
-      define_method("#{name}_v".to_sym) do
-        inst_var = instance_variable_get(var_name)
-        raise "invalid format #{inst_var}" if inst_var !~ args[0]
-      end
-    end
-
-    define_method(:validate!) do
-      my_methods = public_methods.grep(/name_v|number_v|name_manufacturer_v/)
-      my_methods.each { |method| send method }
-    end
-
-    define_method(:valid?) do
+  # instance_method
+  module InstanceMethods
+    def valid?
       validate!
       true
     rescue StandardError
       false
+    end
+
+    protected
+
+    def validate!
+      my_methods = public_methods.grep(/present|format|type/)
+      my_methods.each { |method| send method }
     end
   end
 end

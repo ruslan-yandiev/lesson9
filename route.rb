@@ -2,6 +2,7 @@
 
 # rubocop get the f..k out
 class Route
+  include Validation
   include InstanceCounter
 
   NAME = /^[а-яa-z]+\D/i.freeze

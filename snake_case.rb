@@ -157,15 +157,15 @@ class Constr
   end
 
   def show_additional_values(object)
-    puts 'Хотите отобразить последний цвет и дату ремонта?(да/нет)'
+    puts 'Хотите отобразить цвет и дату ремонта?(да/нет)'
     yes_or_no = gets.chomp
 
     return unless yes_or_no == 'да'
 
-    puts object.color
-    puts object.repair_date
+    puts object.color.last
+    puts object.repair_date.last
 
-    puts 'Хотите отобразить всю историю изменений цвета и ремонтов?(да/нет)'
+    puts 'Хотите отобразить историю?(да/нет)'
     yes_or_no = gets.chomp
 
     return unless yes_or_no == 'да'
