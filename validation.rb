@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # validation_module
-module Validation
+class Validation
   def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
@@ -34,7 +34,7 @@ module Validation
       end
     end
 
-    def presence_valid(value, args)
+    def presence_valid(value,args)
       raise 'is not present!!!' if value.nil? || value == ''
     end
 
