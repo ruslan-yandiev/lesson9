@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # validation_module
-class Validation
+module Validation
   def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
