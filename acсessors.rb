@@ -7,18 +7,19 @@ class Module
       raise TypeError, 'method name is not symbol' unless method.is_a?(Symbol)
 
       var_name = "@#{method}"
+      history_name = "@#{method}_history"
 
       define_method(method) { instance_variable_get(var_name) }
 
       define_method("#{method}=") do |value|
-        values = [instance_variable_get(var_name), value].flatten.compact
-        instance_variable_set(var_name, values)
+        instance_variable_set(var_name, value)
+        instance_variable_get(history_name) << value
+      rescue StandardError
+        instance_variable_set(history_name, [])
+        retry
       end
 
-      define_method("#{method}_history") do
-        value = instance_variable_get(var_name)
-        instance_variable_set("@#{method}_history".to_sym, value)
-      end
+      define_method("#{method}_history") { instance_variable_get(history_name) }
     end
   end
 

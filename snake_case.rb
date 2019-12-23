@@ -162,8 +162,8 @@ class Constr
 
     return unless yes_or_no == 'да'
 
-    puts object.color.last
-    puts object.repair_date.last
+    puts object.color
+    puts object.repair_date
 
     puts 'Хотите отобразить историю?(да/нет)'
     yes_or_no = gets.chomp

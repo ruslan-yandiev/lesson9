@@ -9,31 +9,12 @@ module Validation
 
   # class_method
   module ClassMethods
+    attr_accessor :validations
+
     def validate(name, validation, *args)
-      send "#{validation}_valid", name, *args
-    end
-
-    protected
-
-    def presence_valid(name)
-      define_method("#{name}_present?") do
-        value = instance_variable_get("@#{name}")
-        raise "#{name} is not present!!!" if value.nil? || value == ''
-      end
-    end
-
-    def format_valid(name, args)
-      define_method("#{name}_format?") do
-        value = instance_variable_get("@#{name}")
-        raise "#{name} invalid format!!!" if value !~ args
-      end
-    end
-
-    def type_valid(name, args)
-      define_method("#{name}_type?") do
-        value = instance_variable_get("@#{name}")
-        raise TypeError, "#{name} is not #{args}" unless value.is_a? args
-      end
+      @validations ||= []
+      valid = [validation, name, *args]
+      @validations << valid
     end
   end
 
@@ -46,11 +27,23 @@ module Validation
       false
     end
 
-    protected
-
     def validate!
-      my_methods = public_methods.grep(/present|format|type/)
-      my_methods.each { |method| send method }
+      self.class.validations.each do |validation|
+        instance_var = instance_variable_get("@#{validation[1]}".to_sym)
+        send("#{validation[0]}_valid", instance_var, validation[2])
+      end
+    end
+
+    def presence_valid(value, _arg)
+      raise 'is not present!!!' if value.nil? || value == ''
+    end
+
+    def format_valid(value, args)
+      raise "#{value} invalid format!!!" if value !~ args
+    end
+
+    def type_valid(value, args)
+      raise TypeError, "#{value} is not #{args}" unless value.is_a? args
     end
   end
 end

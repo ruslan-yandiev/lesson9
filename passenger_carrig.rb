@@ -2,6 +2,10 @@
 
 # rubocop get the f..k out
 class PassengerCarrig < Carrig
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
+  validate :name_manufacturer, :format, NAME_FORMAT
+
   def increase_amount
     super(1)
   end

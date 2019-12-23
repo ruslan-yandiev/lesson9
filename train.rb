@@ -12,9 +12,6 @@ class Train
   attr_reader :carrig, :number
   attr_accessor_with_history :color, :repair_date
   strong_attr_accessor :production_year, Integer
-  validate :number, :presence
-  validate :number, :format, NUMBER_FORMAT
-  validate :name_manufacturer, :format, NAME_FORMAT
 
   def initialize(number)
     @number = number
